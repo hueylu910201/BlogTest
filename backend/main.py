@@ -20,6 +20,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/ping")
+def ping():
+    return {"ok": True}
+
 @app.on_event("startup")
 def on_startup():
     Base.metadata.create_all(bind=engine)

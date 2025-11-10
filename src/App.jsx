@@ -1,30 +1,33 @@
 import React, { useState, useEffect } from "react";
 import PostsList from "./components/PostList";
 import NewPostForm from "./components/NewPostForm";
+import NewPostPage from "./pages/NewPostPage";
 import axios from "axios";
 import './App.css'
 
 function App() {
-  // const [posts, setPosts] = useState([]);
-  // const [title, setTitle] = useState("");
-
-  // useEffect(() => {
-  //   axios.get("http://127.0.0.1:8000/posts").then((res) => {
-  //     setPosts(res.data);
-  //   });
-  // }, []);
-  const [refreshKey, setRefreshKey] = useState(0); // 控制重新載入文章
+  // const [refreshKey, setRefreshKey] = useState(0); // 控制重新載入文章
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>我的部落格</h1>
+    <div className="min-h-screen bg-base-200">
+      {/* 導覽列 */}
+      <nav className="navbar bg-base-100 shadow-md">
+        <div className="container mx-auto flex justify-between items-center px-4">
+          <Link to="/" className="btn btn-ghost normal-case text-xl">
+            我的部落格
+          </Link>
+          <Link to="/new" className="btn btn-primary">
+            ➕新增文章
+          </Link>
+        </div>
+      </nav>
 
-      {/* 新增文章表單 */}
-      <NewPostForm
-        onPostAdded={() => setRefreshKey((oldKey) => oldKey + 1)}
-      />
-
-      {/* 文章列表（每次新增完自動更新） */}
-      <PostsList key={refreshKey} />
+      {/* 路由區 */}
+      <div className="container mx-auto p-6">
+        <Routes>
+          <Route path="/" element={<PostsList />} />
+          <Route path="/new" element={<NewPostPage />} />
+        </Routes>
+      </div>
     </div>
   )
 }
