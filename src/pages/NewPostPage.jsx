@@ -14,6 +14,7 @@ function NewPostPage() {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [success, setSuccess] = useState(false);
 
   // 🔹 將標題轉換成 slug
   const generateSlug = (text) => {
@@ -44,9 +45,11 @@ function NewPostPage() {
     e.preventDefault();
     setLoading(true);
     setMessage("");
+    setSuccess(false);
 
     try {
       await axios.post(API_URL, form);
+      setSuccess(true);
       setMessage("文章新增成功！");
       setTimeout(() => navigate("/"), 1200);
     } catch (err) {
@@ -58,62 +61,93 @@ function NewPostPage() {
   };
 
   return (
-    <div className="max-w-xl mx-auto mt-10">
-      <div className="card bg-base-100 shadow-xl">
+    <div className="min-h-screen bg-gradient-to-br from-base-200 to-base-300 flex justify-center items-center p-6">
+      <div className="card w-full max-w-2xl bg-base-100 shadow-2xl border border-base-200">
         <div className="card-body">
-          <h2 className="card-title">📝 新增文章</h2>
+          <h2 className="card-title text-2xl font-bold text-primary mb-2">
+            新增文章
+          </h2>
+          <p className="text-gray-500 mb-4 card-title">
+            請輸入文章內容，Slug 將會自動根據標題生成。
+          </p>
 
-          <form onSubmit={handleSubmit} className="form-control space-y-4">
-            <input
-              type="text"
-              name="title"
-              placeholder="標題"
-              className="input input-bordered"
-              value={form.title}
-              onChange={handleChange}
-              required
-            />
+          {/* 成功訊息 alert */}
+          {success && (
+            <div className="alert alert-success shadow-sm mb-4 animate-fadeIn">
+              <span>{message}</span>
+            </div>
+          )}
 
-            <textarea
-              name="content"
-              placeholder="內容"
-              className="textarea textarea-bordered h-32"
-              value={form.content}
-              onChange={handleChange}
-              required
-            />
+          {/* 錯誤訊息 alert */}
+          {!success && message && (
+            <div className="alert alert-error shadow-sm mb-4 animate-fadeIn">
+              <span>{message}</span>
+            </div>
+          )}
 
-            <input
-              type="text"
-              name="author"
-              placeholder="作者"
-              className="input input-bordered"
-              value={form.author}
-              onChange={handleChange}
-              required
-            />
+          <form
+            onSubmit={handleSubmit}
+            className="form-control gap-4 animate-fadeIn"
+          >
+            <label className="form-control w-full gap-2">
+              <span className="label-text font-semibold card-title">標題</span>
+              <input
+                type="text"
+                name="title"
+                placeholder="請輸入文章標題"
+                className="input input-bordered w-full"
+                value={form.title}
+                onChange={handleChange}
+                required
+              />
+            </label>
 
-            {/* 🔹 slug 欄位變成唯讀（自動生成） */}
-            <input
-              type="text"
-              name="slug"
-              placeholder="自動生成網址代稱"
-              className="input input-bordered bg-base-200"
-              value={form.slug}
-              readOnly
-            />
+
+            <label className="form-control w-full">
+              <span className="label-text font-semibold card-title">文章內容</span>
+              <textarea
+                name="content"
+                placeholder="請輸入文章內容"
+                className="textarea textarea-bordered w-full h-48"
+                value={form.content}
+                onChange={handleChange}
+                required
+              />
+            </label>
+
+            <label className="form-control w-full">
+              <span className="label-text font-semibold card-title">作者</span>
+              <input
+                type="text"
+                name="author"
+                placeholder="輸入作者名稱"
+                className="input input-bordered w-full"
+                value={form.author}
+                onChange={handleChange}
+                required
+              />
+            </label>
+
+            <label className="form-control w-full">
+              <span className="label-text font-semibold card-title">網址代稱（Slug）</span>
+              <span className="label-text-alt text-gray-400 card-title">自動生成</span>
+              <input
+                type="text"
+                name="slug"
+                className="input input-bordered w-full"
+                value={form.slug}
+                readOnly
+              />
+            </label>
 
             <button
               type="submit"
-              className={`btn btn-primary w-full ${loading ? "loading" : ""}`}
+              className={`btn btn-primary text-black mt-4 w-full ${loading ? "loading" : ""
+                }`}
             >
               {loading ? "送出中..." : "送出文章"}
             </button>
           </form>
-
-          {message && (
-            <p className="text-center mt-3 text-sm text-gray-600">{message}</p>
-          )}
         </div>
       </div>
     </div>
